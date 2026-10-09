@@ -3,12 +3,16 @@ import argparse
 import io
 import os
 import webbrowser
+from pathlib import Path
 from tkinter import Tk, Label, Button, Frame
 from tkinter import messagebox
 from urllib.request import urlopen
 
 import requests
 from PIL import ImageTk, Image
+
+IMAGE_DIR = Path(__file__).resolve().parent / 'wallpaper_viewer'
+DEMO_URL = 'https://github.com/sania-commits/PYTHON_GUI_PROJECTS#news-reader'
 
 
 class NewsApp:
@@ -21,8 +25,8 @@ class NewsApp:
         self.demo = demo
         if demo:
             self.articles = [
-                {'title': 'Offline demo: explore the news reader', 'description': 'Sample content for demonstrating the interface. This is not a live news headline. Use Next and Prev to browse, or configure NEWS_API_KEY to fetch actual headlines.'},
-                {'title': 'Offline demo: article navigation', 'description': 'This second sample demonstrates wrapping navigation, text layout, and the local image fallback. No API request is made in demo mode.'},
+                {'title': 'Offline demo: explore the news reader', 'description': 'Sample content, not a live news headline. The image is a bundled wallpaper. Browse with Next and Prev; Demo Details opens the setup guide.', 'demo_image': 'img1.jpg', 'url': DEMO_URL},
+                {'title': 'Offline demo: article navigation', 'description': 'This second sample demonstrates navigation and a different bundled wallpaper. Configure NEWS_API_KEY for actual headlines and article links.', 'demo_image': 'img2.jpg', 'url': DEMO_URL},
             ]
         else:
             key = os.environ.get('NEWS_API_KEY')
@@ -51,7 +55,11 @@ class NewsApp:
         for widget in self.root.pack_slaves():
             widget.destroy()
         article = self.articles[index]
-        image = Image.new('RGB', (350, 250), '#24384a')
+        try:
+            with Image.open(IMAGE_DIR / article.get('demo_image', 'img1.jpg')) as local_image:
+                image = local_image.convert('RGB').resize((350, 250))
+        except OSError:
+            image = Image.new('RGB', (350, 250), '#24384a')
         image_url = article.get('urlToImage')
         if image_url and not self.demo:
             try:
@@ -72,12 +80,17 @@ class NewsApp:
         count = len(self.articles)
         Button(frame, text='Prev', width=10, height=3, command=lambda: self.load_news_item((index - 1) % count)).pack(side='left')
         url = article.get('url')
-        Button(frame, text='Read More', width=10, height=3, state='normal' if url else 'disabled', command=lambda: self.open_link(url)).pack(side='left')
+        Button(frame, text='Demo Details' if self.demo else 'Read More', width=10, height=3, command=lambda: self.open_link(url)).pack(side='left')
         Button(frame, text='Next', width=10, height=3, command=lambda: self.load_news_item((index + 1) % count)).pack(side='left')
 
     def open_link(self, url):
         if url and url.startswith(('https://', 'http://')):
-            webbrowser.open(url)
+            try:
+                opened = webbrowser.open(url)
+                if not opened:
+                    messagebox.showinfo('News App', 'No browser could be opened. Article URL: ' + url)
+            except webbrowser.Error:
+                messagebox.showinfo('News App', 'The browser could not be opened. Article URL: ' + url)
         else:
             messagebox.showinfo('News App', 'No web article is available for this item.')
 

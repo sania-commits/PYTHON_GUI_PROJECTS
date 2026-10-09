@@ -78,7 +78,7 @@ export NEWS_API_KEY="YOUR_NEWSAPI_KEY"
 python Wallpapers/news_gui.py
 ```
 
-The reader handles missing keys, request failures, empty article lists, missing descriptions, and unavailable images. Image failures use a local plain-color placeholder. Live API behavior depends on your network and NewsAPI account access; it was not verified with a working key in this documentation pass. Requests currently run on the GUI thread, so fetching can briefly block the window.
+The reader handles missing keys, request failures, empty article lists, missing descriptions, and unavailable images. Image failures use a bundled wallpaper, with a plain-color fallback if that local file is unavailable. Offline mode shows two bundled wallpapers; its **Demo Details** button opens this setup guide. In live mode, **Read More** opens the article URL, or shows an explanatory message when the article has no valid link. Live API behavior depends on your network and NewsAPI account access; it was not verified with a working key in this documentation pass. Requests currently run on the GUI thread, so fetching can briefly block the window.
 
 An API key embedded in the previous code was removed from the current version. If that key is still active, revoke or rotate it in your NewsAPI account: deleting it from the latest file does not remove it from Git history.
 
