@@ -1,13 +1,16 @@
 from tkinter import *
 from PIL import Image, ImageTk
 from tkinter import messagebox
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
 
 def handle_login():
     email = email_input.get()
     password = password_input.get()
 
-    if email == "sania77a@gmail.com" and password == "1234":
-        messagebox.showinfo("Welcome", "Welcome to Flipkart")
+    if email == "demo@example.com" and password == "demo123":
+        messagebox.showinfo("Demo", "Demo login successful. No account is authenticated.")
     else:
         messagebox.showinfo("Welcome", "Please enter your correct credentials")
 
@@ -15,16 +18,16 @@ def handle_login():
 root = Tk()
 
 # Window settings
-root.title("Login Form")
+root.title("Login Form — UI Demo")
 root.geometry("350x500")
 root.configure(bg="#0096DC")
 
 # Set window icon
-icon = PhotoImage(file="icons8-favicon-16.png")
+icon = PhotoImage(file=str(BASE_DIR / "icons8-favicon-16.png"))
 root.iconphoto(True, icon)
 
 # Load and resize logo image
-img = Image.open("flipkart-logo-39904.ico")
+img = Image.open(BASE_DIR / "flipkart-logo-39904.ico")
 img = img.resize((100, 100))
 
 photo = ImageTk.PhotoImage(img)
@@ -48,7 +51,7 @@ password_label = Label(root,text='Enter Password',fg="white",bg="#0096DC")
 password_label.pack(pady=(15,5))
 password_label.config(font=('verdana',14))
 
-password_input = Entry(root, width=30)
+password_input = Entry(root, width=30, show='*')
 password_input.pack(ipady= 6,pady=(1,15))
 
 login_button = Button(root,text='Login Here', bg = 'white', fg = 'black', width = 10 , height=2, command=handle_login)

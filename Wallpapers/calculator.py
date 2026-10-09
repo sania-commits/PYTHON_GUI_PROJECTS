@@ -4,16 +4,24 @@ first_number = second_number = operator = None
 
 def get_digit(digit):
     current = result_label['text']
+    if current == 'Error':
+        current = ''
     new = current + str(digit)
     result_label.config(text=new)
 
 def clear():
+    global first_number, second_number, operator
+    first_number = second_number = operator = None
     result_label.config(text="")
     history_label.config(text="")
 
 def get_operator(op):
     global first_number,operator
-    first_number = int(result_label['text'])
+    try:
+        first_number = float(result_label['text'])
+    except ValueError:
+        result_label.config(text='Error')
+        return
     operator = op
     history_label.config(text=f"{first_number} {operator}")
     result_label.config(text='')
@@ -21,7 +29,14 @@ def get_operator(op):
 def get_result():
     global first_number,second_number,operator
 
-    second_number = int(result_label['text'])
+    try:
+        second_number = float(result_label['text'])
+    except ValueError:
+        result_label.config(text='Error')
+        return
+    if first_number is None or operator is None:
+        result_label.config(text='Error')
+        return
 
     if operator == '+':
         answer = first_number + second_number
@@ -35,16 +50,17 @@ def get_result():
     else:
         if second_number ==0:
             result_label.config(text="Error")
+            return
         else:
             answer = first_number / second_number
 
     history_label.config( text=f"{first_number} {operator} {second_number} =")
-    result_label.config(text=str(answer))
+    result_label.config(text=str(int(answer)) if answer.is_integer() else str(answer))
 
 
 root = Tk()
 root.title('Calculator')
-root.geometry('350x370')
+root.geometry('350x440')
 root.resizable(0,0)
 root.config(bg='black')
 

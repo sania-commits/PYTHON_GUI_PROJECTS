@@ -16,10 +16,10 @@ IMG_DIR = os.path.join(BASE_DIR, "wallpaper_viewer")
 # Load images:
 img_array = []
 
-files = [
+files = sorted([
     file for file in os.listdir(IMG_DIR)
     if file.lower().endswith((".jpg",".jpeg",".png"))
-]
+])
 
 for file in files:
     img_path = os.path.join(IMG_DIR, file)
@@ -32,6 +32,8 @@ for file in files:
 
 # Current image index:
 current = 0
+if not img_array:
+    raise RuntimeError('Add a JPG, JPEG or PNG image to the wallpaper_viewer folder.')
 
 # Image label:
 image_label = Label(root,bg="black")
@@ -58,10 +60,10 @@ def show_previous():
 button_frame = Frame(root, bg="black")
 button_frame.pack(pady=10)
 
-prev_btn = Button(button_frame, text="Previous", command=show_next)
+prev_btn = Button(button_frame, text="Previous", command=show_previous)
 prev_btn.pack(side="left", padx=10)
 
-next_btn = Button(button_frame, text="Next", command=show_previous)
+next_btn = Button(button_frame, text="Next", command=show_next)
 next_btn.pack(side="right", padx=10)
 
 root.mainloop()
