@@ -17,7 +17,7 @@ These are captures of the running desktop apps. The news screenshot uses explici
 
 | Calculator | Wallpaper Viewer |
 | --- | --- |
-| ![Calculator showing 1 + 8 = 9](docs/screenshots/calculator.png) | ![Wallpaper Viewer displaying a bundled image](docs/screenshots/wallpaper-viewer.png) |
+| ![Redesigned calculator showing 78 + 45 = 123](docs/screenshots/calculator.png) | ![Wallpaper Viewer displaying a bundled image](docs/screenshots/wallpaper-viewer.png) |
 
 | Login Form Demo | News Reader — Offline Demo |
 | --- | --- |
@@ -88,7 +88,7 @@ Use `demo@example.com` and `demo123` for the local success message. These are pu
 
 ## Calculator behavior
 
-Enter a number, select an operator, enter another number, and press `=`. `C` clears the display, history and pending operation. Division by zero or incomplete input displays `Error` instead of raising a callback exception. A digit starts fresh after an error. Fractional division results can be reused in the next operation; there is no decimal-entry button or full expression parser.
+The resizable layout uses four equal button columns, consistent spacing, and a separate operation-history and result display. Enter a number, select an operator, enter another number, and press `=`. `C` clears the display, history and pending operation. Division by zero or incomplete input displays `Error` instead of raising a callback exception. A digit starts fresh after an error. Fractional division results can be reused in the next operation; there is no decimal-entry button or full expression parser.
 
 Run the callback regression tests without opening a GUI:
 

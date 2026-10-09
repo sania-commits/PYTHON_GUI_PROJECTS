@@ -60,82 +60,61 @@ def get_result():
 
 root = Tk()
 root.title('Calculator')
-root.geometry('350x440')
-root.resizable(0,0)
-root.config(bg='black')
+root.geometry('360x500')
+root.minsize(320, 460)
+root.configure(bg='#101b18', padx=18, pady=18)
+root.columnconfigure(0, weight=1)
+root.rowconfigure(2, weight=1)
 
-history_label = Label( root,text="",bg="black",fg="white")
-history_label.grid(row=0,column=0,columnspan=5,sticky='e',padx=10,pady=(0,20))
-history_label.config(font=('verdana',20))
+Label(root, text='CALCULATOR', bg='#101b18', fg='#93a89c',
+      font=('Segoe UI', 10, 'bold'), anchor='w').grid(row=0, column=0, sticky='ew', pady=(0, 14))
 
-result_label = Label(root,text="",bg='black',fg='white')
-result_label.grid(row=1,column=0,columnspan=5,padx=10,pady=(0,20),sticky='e')
-result_label.config(font=('verdana',30,'bold'))
+display = Frame(root, bg='#1c2c25', padx=16, pady=14)
+display.grid(row=1, column=0, sticky='ew', pady=(0, 18))
+display.columnconfigure(0, weight=1)
+history_label = Label(display, text='', bg='#1c2c25', fg='#a8bcad',
+                      font=('Segoe UI', 13), anchor='e')
+history_label.grid(row=0, column=0, sticky='ew', pady=(0, 8))
+result_label = Label(display, text='', bg='#1c2c25', fg='#f1f7f2',
+                     font=('Segoe UI', 32, 'bold'), anchor='e')
+result_label.grid(row=1, column=0, sticky='ew')
 
-btn7 = Button(root,text='7',bg ='#00a65a',fg='white', width=5,height=2,command = lambda: get_digit(7))
-btn7.grid(row=2,column=0)
-btn7.config(font=('verdana',14))
+keypad = Frame(root, bg='#101b18')
+keypad.grid(row=2, column=0, sticky='nsew')
+for index in range(4):
+    keypad.columnconfigure(index, weight=1, uniform='keys')
+    keypad.rowconfigure(index, weight=1, uniform='keys')
 
-btn8 = Button(root,text='8',bg ='#00a65a',fg='white', width=5,height=2,command = lambda: get_digit(8))
-btn8.grid(row=2,column=1)
-btn8.config(font=('verdana',14))
+keys = [('7', '8', '9', '+'), ('4', '5', '6', '-'),
+        ('1', '2', '3', '*'), ('C', '0', '=', '/')]
+for row, values in enumerate(keys):
+    for column, text in enumerate(values):
+        if text.isdigit():
+            command = lambda digit=int(text): get_digit(digit)
+            background, foreground = '#263b30', '#f1f7f2'
+        elif text == 'C':
+            command = clear
+            background, foreground = '#493a2c', '#ffd5ad'
+        elif text == '=':
+            command = get_result
+            background, foreground = '#c6ec9a', '#112622'
+        else:
+            command = lambda op=text: get_operator(op)
+            background, foreground = '#365841', '#d9f5c6'
+        button = Button(keypad, text=text, command=command,
+                        bg=background, fg=foreground,
+                        activebackground='#56784c', activeforeground='#ffffff',
+                        font=('Segoe UI', 18, 'bold'), relief='flat', bd=0,
+                        cursor='hand2', highlightthickness=0)
+        button.grid(row=row, column=column, sticky='nsew',
+                    padx=(0 if column == 0 else 5, 0 if column == 3 else 5),
+                    pady=(0 if row == 0 else 5, 0 if row == 3 else 5))
 
-btn9 = Button(root,text='9',bg ='#00a65a',fg='white', width=5,height=2,command = lambda: get_digit(9))
-btn9.grid(row=2,column=2)
-btn9.config(font=('verdana',14))
+# Keep long results inside the display when the window is resized.
+def fit_display(event=None):
+    width = max(display.winfo_width() - 32, 1)
+    result_label.config(wraplength=width)
+    history_label.config(wraplength=width)
 
-btn_add = Button(root,text='+',bg ='#00a65a',fg='white', width=5,height=2,command = lambda: get_operator('+'))
-btn_add.grid(row=2,column=3)
-btn_add.config(font=('verdana',14))
-
-btn4 = Button(root,text='4',bg ='#00a65a',fg='white', width=5,height=2,command = lambda: get_digit(4))
-btn4.grid(row=3,column=0)
-btn4.config(font=('verdana',14))
-
-btn5 = Button(root,text='5',bg ='#00a65a',fg='white', width=5,height=2,command = lambda: get_digit(5))
-btn5.grid(row=3,column=1)
-btn5.config(font=('verdana',14))
-
-btn6 = Button(root,text='6',bg ='#00a65a',fg='white', width=5,height=2,command = lambda: get_digit(6))
-btn6.grid(row=3,column=2)
-btn6.config(font=('verdana',14))
-
-btn_sub = Button(root,text='-',bg ='#00a65a',fg='white', width=5,height=2,command = lambda: get_operator('-'))
-btn_sub.grid(row=3,column=3)
-btn_sub.config(font=('verdana',14))
-
-btn1 = Button(root,text='1',bg ='#00a65a',fg='white', width=5,height=2,command = lambda: get_digit(1))
-btn1.grid(row=4,column=0)
-btn1.config(font=('verdana',14))
-
-btn2 = Button(root,text='2',bg ='#00a65a',fg='white', width=5,height=2,command = lambda: get_digit(2))
-btn2.grid(row=4,column=1)
-btn2.config(font=('verdana',14))
-
-btn3 = Button(root,text='3',bg ='#00a65a',fg='white', width=5,height=2,command = lambda: get_digit(3))
-btn3.grid(row=4,column=2)
-btn3.config(font=('verdana',14))
-
-btn_mul = Button(root,text='*',bg ='#00a65a',fg='white', width=5,height=2,command = lambda: get_operator('*'))
-btn_mul.grid(row=4,column=3)
-btn_mul.config(font=('verdana',14))
-
-btn_clr = Button(root,text='C',bg ='#00a65a',fg='white', width=5,height=2, command = lambda: clear())
-btn_clr.grid(row=5,column=0)
-btn_clr.config(font=('verdana',14))
-
-btn0 = Button(root,text='0',bg ='#00a65a',fg='white', width=5,height=2,command = lambda: get_digit(0))
-btn0.grid(row=5,column=1)
-btn0.config(font=('verdana',14))
-
-btn_equal = Button(root,text='=',bg ='#00a65a',fg='white', width=5,height=2,command = get_result)
-btn_equal.grid(row=5,column=2)
-btn_equal.config(font=('verdana',14))
-
-btn_div = Button(root,text='/',bg ='#00a65a',fg='white', width=5,height=2,command = lambda: get_operator('/'))
-btn_div.grid(row=5,column=3)
-btn_div.config(font=('verdana',14))
-
-
-
+display.bind('<Configure>', fit_display)
 root.mainloop()
